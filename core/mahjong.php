@@ -1,28 +1,8 @@
 <?php
 
-define('MAHJONG_TYPE_SEQ',				's');
-define('MAHJONG_TYPE_WORD',				'w');
-define('MAHJONG_TYPE_FLOUR',				'f');
-
-/**
- * For Test Echo
- */
-function dump($p)
-{
-	if (is_array($p)) {
-		foreach($p as $e) {
-			echo
-				//'[',$e['index'],']',
-				//'[',$e['value'],']',
-				'|',$e['name'],'|';
-		}
-	} elseif (is_string($p)) {
-		echo $p;
-	} else {
-		var_dump($p);
-	}
-	echo "\n";
-}
+define('MAHJONG_TYPE_SEQ',				's'); // 序数牌 1-9*4*3
+define('MAHJONG_TYPE_WORD',				'w'); // 字牌 7*4
+define('MAHJONG_TYPE_FLOUR',			'f'); // 花牌 8
 
 class Mahjong
 {

@@ -3,9 +3,9 @@
 /**
  * 处理请求输入输出
  */
- class Base
- {
- 	public static function getRequestJson($assoc = null)
+class Base
+{
+	public static function getRequestJson($assoc = null)
 	{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
 			$post = $_POST['data'];
@@ -35,4 +35,4 @@
 		echo $json;
 		die();
 	}
- }
+}

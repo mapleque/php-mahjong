@@ -26,26 +26,66 @@
 
 0. create
 创建并开始一局游戏
+> 输入：
+	game_id,可选，如果不传则新建一局游戏，如果传了就在游戏上增加一个人
+	user_id,必选，参加游戏的用户
+	player_num,可选，默认4人，可以指定参与人数
+> 逻辑：
+	创建或者参加游戏的用户都是等待状态，用户可以调用开始接口来改变这个状态
+> 输出：
+	创建成功或者失败，若成功则返回game_id
 
 1. start
 开始一盘
+> 输入：
+	game_id,必选
+	user_id,必选
+> 逻辑：
+	将用户状态置为开始或者等待，如果同一个game下人数达到指定数字，并且所有人都开始，则开始游戏
+> 输出：
+	成功或失败
 
 2. get
 抓牌，补花
-
-3. push
-出牌
+> 输入：
+	game_id,必选
+	user_id,必选
+> 逻辑：
+	抓新的牌，可能是4个，可能是2个，也可能是1个
+> 输出：
+	抓到的牌数组
 
 4. cry
-吃，碰，杠，胡
+出牌，吃，碰，杠，胡
+> 输入：
+	game_id,必选
+	user_id,必选
+	cmd,必选，操作选项，chi,peng,gang,hu,pass,push
+	card_index_list,必选，牌序列集合
+> 逻辑：
+	尝试执行指定操作，更新牌局信息
+	如果有人胡牌，还要更新结算信息，同时更新房间选手状态改为等待开始状态
+> 输出：
+	成功或失败
 
-5. dynamic_detail
-动态信息：手牌（打码），牌池，牌墙，胡牌
-每一手都有变化的信息
+5. set_detail
+> 输入：
+	game_id,必选
+	user_id,必选
+> 逻辑：
+	每一局之中不断变化
+> 输出：
+	手牌（打码），牌池，牌墙，有人胡牌，等待操作（op|get）
 
-6. static_detail
-静态信息：积分，圈风，门风，庄风，色子数
-当前盘中不变的信息
+7. game_detail
+> 输入：
+	game_id,必选
+	user_id,必选
+> 逻辑：
+	每一局开始前不短变化
+> 输出：
+	参与选手，参与选手是否开始，参与选手信息，牌局信息（积分，圈风，门风，庄风，色子数）
+
 
 ####数据
 
@@ -193,11 +233,89 @@
 ####交互
 
 1. 游戏大厅，请求create接口，进入游戏房间
+	action('create', {
+		data:{
+			game_id:
+			user_id:
+		},
+		success:function(){
+			enter room
+			show start or waitting button
+			refresh game info (request game_detail)
+		}
+	});
 2. 游戏房间，请求start接口，开始游戏
-3. 游戏中，请求一次static_detail接口，显示游戏信息
-4. 游戏中，不断请求dynamic_detail接口，更新游戏状态
-5. 游戏中，根据游戏状态信息中的信号，自动请求get接口，更新游戏状态（注意此时应该停止自动更新状态）
-6. 游戏中，根据游戏状态信息中的信号，激活操作视图
-7. 游戏中，当用户操作，请求cry接口，更新游戏状态
-8. 游戏中，当用户操作，请求push接口，更新游戏状态（注意此时恢复自动更新状态）
-9. 游戏中，当游戏状态变为胡牌后，激活开始游戏操作
+	action('start', {
+		data:{
+			game_id:
+			user_id:
+		},
+		success:function(){
+			do nothing
+		}
+	});
+3. 每一局开始前，请求game_detail接口，刷新选手信息
+	action('game_detail', {
+		data:{
+			game_id:
+		},
+		success:function(){
+			show game info
+			show player info
+
+			if start
+				refresh set info (request set_detail)
+			else
+				refresh game info (request game_detail)
+		}
+	});
+4. 新的一局开始后，请求set_detail接口，更新牌局状态
+	action('set_detail', {
+		data:{
+			game_id:
+			user_id:
+		},
+		success:function(){
+			show set info
+			show play info
+
+			if waiting for selt
+				show cry option pannel and do sth (request cry)
+			else if waiting for get
+				get (request get)
+			else if finish
+				show win info
+				refresh game info (request game_detail)
+			else
+				refresh set info (request set_detail)
+		}
+	});
+
+5. 游戏中，根据游戏状态信息中的信号，请求get接口
+	action('get', {
+		data: {
+			game_id:
+			user_id:
+		},
+		success:function(){
+			if success
+				refresh set info (request set_detail)
+			else
+				repeat or show offline
+		}
+	});
+6. 游戏中，根据游戏状态信息中的信号，激活操作视图，并根据用户操作，请求cry接口
+	action('cry', {
+		data: {
+			game_id:
+			user_id:
+			cmd:
+			card_index_list:
+		},
+		success:function(){
+			if success
+				refresh set info (request set_detail)
+			else
+				repeat or show offline
+		}
+	})
