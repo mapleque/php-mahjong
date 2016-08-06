@@ -48,17 +48,17 @@
 2. get
 抓牌，补花
 > 输入：
-	game_id,必选
+	set_id,必选
 	user_id,必选
 > 逻辑：
 	抓新的牌，可能是4个，可能是2个，也可能是1个
 > 输出：
 	抓到的牌数组
 
-4. cry
+4. op
 出牌，吃，碰，杠，胡
 > 输入：
-	game_id,必选
+	set_id,必选
 	user_id,必选
 	cmd,必选，操作选项，chi,peng,gang,hu,pass,push
 	card_index_list,必选，牌序列集合
@@ -70,14 +70,14 @@
 
 5. set_detail
 > 输入：
-	game_id,必选
+	set_id,必选
 	user_id,必选
 > 逻辑：
 	每一局之中不断变化
 > 输出：
 	手牌（打码），牌池，牌墙，有人胡牌，等待操作（op|get）
 
-7. game_detail
+6. game_detail
 > 输入：
 	game_id,必选
 	user_id,必选
@@ -272,7 +272,7 @@
 4. 新的一局开始后，请求set_detail接口，更新牌局状态
 	action('set_detail', {
 		data:{
-			game_id:
+			set_id:
 			user_id:
 		},
 		success:function(){
@@ -305,7 +305,7 @@
 		}
 	});
 6. 游戏中，根据游戏状态信息中的信号，激活操作视图，并根据用户操作，请求cry接口
-	action('cry', {
+	action('op', {
 		data: {
 			game_id:
 			user_id:

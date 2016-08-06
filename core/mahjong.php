@@ -1,9 +1,5 @@
 <?php
 
-define('MAHJONG_TYPE_SEQ',				's'); // 序数牌 1-9*4*3
-define('MAHJONG_TYPE_WORD',				'w'); // 字牌 7*4
-define('MAHJONG_TYPE_FLOUR',			'f'); // 花牌 8
-
 class Mahjong
 {
 	public static function dynamic_detail($uid)
