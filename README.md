@@ -319,3 +319,12 @@
 				repeat or show offline
 		}
 	})
+
+####素材
+1. 应用logo
+	> 28*28 png <300k 微信应用授权
+	> 108*108 png <300k 微信应用授权
+	> 32*32 ico 网站favicon
+	> 64*64 ico 网站favicon
+2. 页面设计
+	> 
