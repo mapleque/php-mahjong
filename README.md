@@ -68,7 +68,7 @@
 > 输出：
 	成功或失败
 
-5. set_detail
+5. set_info
 > 输入：
 	set_id,必选
 	user_id,必选
@@ -77,7 +77,7 @@
 > 输出：
 	手牌（打码），牌池，牌墙，有人胡牌，等待操作（op|get）
 
-6. game_detail
+6. game_info
 > 输入：
 	game_id,必选
 	user_id,必选
@@ -241,7 +241,7 @@
 		success:function(){
 			enter room
 			show start or waitting button
-			refresh game info (request game_detail)
+			refresh game info (request game_info)
 		}
 	});
 2. 游戏房间，请求start接口，开始游戏
@@ -254,8 +254,8 @@
 			do nothing
 		}
 	});
-3. 每一局开始前，请求game_detail接口，刷新选手信息
-	action('game_detail', {
+3. 每一局开始前，请求game_info接口，刷新选手信息
+	action('game_info', {
 		data:{
 			game_id:
 		},
@@ -264,13 +264,13 @@
 			show player info
 
 			if start
-				refresh set info (request set_detail)
+				refresh set info (request set_info)
 			else
-				refresh game info (request game_detail)
+				refresh game info (request game_info)
 		}
 	});
-4. 新的一局开始后，请求set_detail接口，更新牌局状态
-	action('set_detail', {
+4. 新的一局开始后，请求set_info接口，更新牌局状态
+	action('set_info', {
 		data:{
 			set_id:
 			user_id:
@@ -285,21 +285,21 @@
 				get (request get)
 			else if finish
 				show win info
-				refresh game info (request game_detail)
+				refresh game info (request game_info)
 			else
-				refresh set info (request set_detail)
+				refresh set info (request set_info)
 		}
 	});
 
 5. 游戏中，根据游戏状态信息中的信号，请求get接口
 	action('get', {
 		data: {
-			game_id:
+			set_id:
 			user_id:
 		},
 		success:function(){
 			if success
-				refresh set info (request set_detail)
+				refresh set info (request set_info)
 			else
 				repeat or show offline
 		}
@@ -307,14 +307,14 @@
 6. 游戏中，根据游戏状态信息中的信号，激活操作视图，并根据用户操作，请求cry接口
 	action('op', {
 		data: {
-			game_id:
+			set_id:
 			user_id:
 			cmd:
 			card_index_list:
 		},
 		success:function(){
 			if success
-				refresh set info (request set_detail)
+				refresh set info (request set_info)
 			else
 				repeat or show offline
 		}
@@ -322,9 +322,11 @@
 
 ####素材
 1. 应用logo
+
 	> 28*28 png <300k 微信应用授权
 	> 108*108 png <300k 微信应用授权
 	> 32*32 ico 网站favicon
 	> 64*64 ico 网站favicon
 2. 页面设计
+
 	> 
