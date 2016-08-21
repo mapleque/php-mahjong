@@ -17,7 +17,7 @@
 				} else {
 					typeof conf.error === 'function' ? conf.error(res.status, res.err) : defaultError(res.status);
 				}
-			};
+			}
 		});
 	};
 

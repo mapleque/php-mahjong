@@ -108,7 +108,7 @@
 	};
 
 	var start = funciton(game_id){
-		action('start', {
+		U.action('start', {
 			data:{
 				game_id:game_id
 			},
@@ -130,7 +130,7 @@
 	};
 
 	var get = function(set_id){
-		action('get', {
+		U.action('get', {
 			data: {
 				set_id:set_id
 			},
@@ -141,7 +141,7 @@
 	};
 
 	var op = function(set_id, cmd, sel){
-		action('op', {
+		U.action('op', {
 			data: {
 				set_id:set_id,
 				cmd: cmd,
