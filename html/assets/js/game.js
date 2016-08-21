@@ -107,7 +107,7 @@
 		});
 	};
 
-	var start = funciton(game_id){
+	var start = function(game_id){
 		U.action('start', {
 			data:{
 				game_id:game_id
