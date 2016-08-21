@@ -4,11 +4,12 @@
 ;(function(){
 	if (!window.U) window.U = {};
 	U.action = function(url, conf){
-		var url = '/api/' + url + '.php';
+		var url = '/' + url + '.php';
 		console.log('[send]', url, conf.data);
 		$.ajax({
 			url:url,
-			method:'POST',
+			type:'POST',
+			dataType: 'json',
 			data:{data:JSON.stringify(conf.data||{})},
 			success:function(res){
 				console.log('[recv]',res);
