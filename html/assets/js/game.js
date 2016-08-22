@@ -5,7 +5,7 @@
 	/***************************************/
 	/* view
 	/***************************************/
-	var $body = $(document).find('artical');
+	var $body = $(document).find('article');
 
 	var $loginForm = (function(){
 		var $root = $('<div class="login-form"></div>');
