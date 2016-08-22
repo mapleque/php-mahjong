@@ -3,6 +3,8 @@
 require dirname(__FILE__) . '/../common/include.php';
 
 ClassLoader::appendMap([
-	'One'			=> 'one',
+	'User'			=> 'user',
 	'Mahjong'		=> 'mahjong',
+	'Game'		=> 'game',
+	'Set'		=> 'set',
 ]);
