@@ -10,17 +10,17 @@ class Base
 		$_SESSION['user_id'] = $user_id;
 	}
 
-	public static function getRequestJson($assoc = null)
+	public static function getRequestJson()
 	{
 		session_start();
 		if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
 			$post = $_POST['data'];
-			$json = json_decode($post, $assoc);
+			$json = json_decode($post, true);
 			if (json_last_error() !== JSON_ERROR_NONE) {
 				self::dieWithError(ERROR_INVALID_REQUEST);
 			}
 		}else{//GET
-			$json = json_decode(json_encode($_GET));
+			$json = json_decode(json_encode($_GET), true);
 			if (json_last_error() !== JSON_ERROR_NONE) {
 				self::dieWithError(ERROR_INVALID_REQUEST);
 			}
