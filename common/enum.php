@@ -5,6 +5,10 @@ define('MAHJONG_TYPE_SEQ',				's'); // 序数牌 1-9*4*3
 define('MAHJONG_TYPE_WORD',				'w'); // 字牌 7*4
 define('MAHJONG_TYPE_FLOUR',			'f'); // 花牌 8
 
+define('MENFENG_EAST',						1); // 门风
+define('MENFENG_NORTH',						2); // 门风
+define('MENFENG_WEST',						3); // 门风
+define('MENFENG_SOUTH',						4); // 门风
 
 // set.op
 define('SET_OP_CHI',	'c'); // 吃

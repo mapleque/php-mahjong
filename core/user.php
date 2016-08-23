@@ -5,6 +5,12 @@
  */
 class User
 {
+	private static $list = [
+		'yangyang',
+		'chenjian',
+		'mother',
+		'father',
+	];
 	/**
 	 * 登陆
 	 * @param string $username
@@ -13,11 +19,15 @@ class User
 	 */
 	public static function login($username, $password)
 	{
-		return [
-			'yangyang' => 1,
-			'chenjian' => 1,
-			'mother' => 1,
-			'father' => 1,
-		][$username] ?: null;
+		return array_search($username) ?: null;
+	}
+
+	/**
+	 * 获取用户信息
+	 * @param string $username
+	 */
+	public static function getUserInfo($uid)
+	{
+		return self::$list[$uid];
 	}
 }

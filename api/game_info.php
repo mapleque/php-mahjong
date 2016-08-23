@@ -4,14 +4,8 @@ require __DIR__ . '/../core/base.php';
 
 $req = Base::getRequestJson();
 
-$user_id = $req['user_id']);
-if (!isset($user_id) {
+$user_id = $req['user_id'];
+if (!isset($user_id)) {
 	Base::dieWithError(ERROR_NOT_LOGIN);
 }
-
-$game_id = $req['game_id'];
-if (!isset($game_id)) {
-	Base::dieWithError(ERROR_INVALID_REQUEST);
-}
-
-Base::dieWithResponse(Game::getGameInfo($game_id, $user_id));
+Base::dieWithResponse(Game::getGameInfo($user_id));

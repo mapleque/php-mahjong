@@ -14,7 +14,7 @@
 			success:function(res){
 				console.log('[recv]',res);
 				if (res.status == 0) {
-					typeof conf.success === 'function' || conf.success(res.data);
+					typeof conf.success === 'function' && conf.success(res.data);
 				} else {
 					typeof conf.error === 'function' ? conf.error(res.status, res.err) : defaultError(res.status);
 				}

@@ -12,8 +12,8 @@
 		var $form = $('<form>'
 			+'<input type="text" name="username">'
 			+'<input type="password" name="password">'
-			+'<input type="button" value="登陆">'
-			+'<input type="button" value="注册">'
+			+'<input type="button" name="login" value="登陆">'
+			+'<input type="button" name="register" value="注册" disabled>'
 			+'</form>');
 		$root.append($form);
 		return $root;
@@ -22,22 +22,30 @@
 	var loadLoginForm = function(){
 		$body.empty().append($loginForm);
 		// click to login
+		var $username = $loginForm.find('input[name=username]');
+		var $password = $loginForm.find('input[name=password]');
+		$loginForm.on('click', 'input[name=login]', function(){
+			login($username.val(), $password.val());
+		});
 		// login(username, password)
+		$loginForm.on('click', 'input[name=register]', function(){});
 	};
 
 	var loadGameList = function(data){
-		//TODO:
+		$body.empty().append('load game list' + JSON.stringify(data));
 		// show not on desk
 		// click to creat or join into
 		// create(game_id||null)
 	};
-	var loadReadyView = function(){
+	var loadReadyView = function(data){
+		$body.empty().append('load ready view' + JSON.stringify(data));
 		// waiting for user ready
 		// show ready button
 		// click to start a new set
 		// start(game_id)
 	};
 	var loadWaitingView = function(data){
+		$body.empty().append('load waiting view' + JSON.stringify(data));
 		// waiting for user op
 		// show op button
 		// click to request op with cmd
@@ -45,6 +53,7 @@
 	};
 
 	var loadPlayingView = function(data){
+		$body.empty().append('load playing view' + JSON.stringify(data));
 		// show playing view
 		// only update info to show
 	};
@@ -70,7 +79,7 @@
 				checkGameStatus();
 			},
 			error: function(){
-				loadLoginForm();				
+				loadLoginForm();
 			}
 		});
 	};
@@ -79,7 +88,7 @@
 		U.action('game_info', {
 			success: function(res){
 				if (!res.game_id) {
-					loadGameList();
+					loadGameList(res);
 				} else if (!res.set_id) {
 					loadReadyView(res);
 					setTimeout(function(){
@@ -94,6 +103,9 @@
 
 	var checkSetStatus = function(set_id){
 		U.action('set_info', {
+			data:{
+				set_id:set_id
+			},
 			success: function(res){
 				if (res.waiting) {
 					loadWaitingView(res);
@@ -101,7 +113,7 @@
 					loadPlayingView(res);
 				}
 				setTimeout(function(){
-					checkSetStatus();
+					checkSetStatus(set_id);
 				}, 500);
 			}
 		});

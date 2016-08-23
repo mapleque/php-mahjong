@@ -20,7 +20,38 @@ class Set
 	 */
 	public static function getSetInfo($set_id, $user_id)
 	{
-		
+		return [
+			cards => [
+				MENFENG_EAST => [
+					hand => [],
+					pool => [],
+					wall => [],
+					waiting => [],
+					win_info => [],
+				],
+				MENFENG_NORTH => [
+					hand => [],
+					pool => [],
+					wall => [],
+					waiting => [],
+					win_info => [],
+				],
+				MENFENG_WEST => [
+					hand => [],
+					pool => [],
+					wall => [],
+					waiting => [],
+					win_info => [],
+				],
+				MENFENG_SOUTH => [
+					hand => [],
+					pool => [],
+					wall => [],
+					waiting => [],
+					win_info => [],
+				],
+			],
+		];
 	}
 
 	/**
@@ -40,7 +71,6 @@ class Set
 	 * @param int $card_index_list
 	 * @return bool
 	 */
-	public static function get($set_id, $user_id, $cmd, $card_index_list)
+	public static function op($set_id, $user_id, $cmd, $card_index_list)
 	{}
-
 }

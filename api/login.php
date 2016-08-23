@@ -14,7 +14,7 @@ if (!isset($username) && !isset($user_id)) {
 
 
 if (!isset($user_id)) {
-	if (!isset($username) || !isset($password)) {
+	if (empty($username) || empty($password)) {
 		Base::dieWithError(ERROR_INVALID_REQUEST);
 	}
 	$user_id = User::login($username, $password);

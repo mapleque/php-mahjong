@@ -35,12 +35,18 @@ class Game
 
 	/**
 	 * 获取游戏信息
-	 * @param int $game_id
 	 * @param int $user_id
 	 * @return array
 	 */
-	public static function getGameInfo($game_id, $user_id)
-	{}
+	public static function getGameInfo($user_id)
+	{
+		return [
+			'game_id' => 1,
+			'set_id' => 1,
+			'user_list' => [1,2,3,4],
+			'game_param' => [],
+		];
+	}
 
 	/**
 	 * 检查game标记位，看是否可以开始游戏
