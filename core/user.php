@@ -5,21 +5,17 @@
  */
 class User
 {
-	private static $list = [
-		'yangyang',
-		'chenjian',
-		'mother',
-		'father',
-	];
 	/**
 	 * 登陆
 	 * @param string $username
 	 * @param string $password
-	 * @return int $user_id|null
+	 * @return int $user_id | null
 	 */
 	public static function login($username, $password)
 	{
-		return array_search($username) ?: null;
+		$sql = 'SELECT id, password FROM user WHERE username = ? LIMIT 1';
+		$user = DB::select($sql, [ $username]);
+		return $password === $user['password'] ? $user['id'] : null;
 	}
 
 	/**
@@ -28,6 +24,7 @@ class User
 	 */
 	public static function getUserInfo($uid)
 	{
-		return self::$list[$uid];
+		$sql = 'SELECT username FROM user WHERE id = ? LIMIT 1';
+		return DB::select($sql, [ $uid ])[0];
 	}
 }
