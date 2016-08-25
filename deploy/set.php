@@ -1,0 +1,7 @@
+<?php
+
+DB::exec('CREATE TABLE set_info (
+	id			INT UNSIGNED AUTO INCREMENT PRIMARY KEY NOT NULL,
+	time		DATETIME NOT NULL
+)');
+
