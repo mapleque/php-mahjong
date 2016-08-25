@@ -12,11 +12,10 @@ if (!isset($user_id) {
 $game_id = $req['game_id'];
 if (!isset($game_id)) {
 	$game_id = Game::create();
-}
-
-
-if (!Game::start($game_id, $user_id)) {
-	Base::dieWithError(ERROR_INTERNAL);
+} else {
+	if (!Game::attend($game_id, $user_id)) {
+		Base::dieWithError(ERROR_INTERNAL);
+	}
 }
 
 Base::dieWithResponse([ 'game_id' => $game_id ]);

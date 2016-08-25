@@ -70,7 +70,6 @@
 
 5. set_info
 > 输入：
-	set_id,必选
 	user_id,必选
 > 逻辑：
 	每一局之中不断变化
@@ -79,7 +78,6 @@
 
 6. game_info
 > 输入：
-	game_id,必选
 	user_id,必选
 > 逻辑：
 	每一局开始前不短变化
