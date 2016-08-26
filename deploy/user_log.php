@@ -1,7 +1,8 @@
 <?php
+require __DIR__ . '/../core/base.php';
 
 DB::exec('CREATE TABLE user_log (
-	id			INT UNSIGNED AUTO INCREMENT PRIMARY KEY NOT NULL,
+	id			INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
 	user_id		INT UNSIGNED,
 	game_id		INT UNSIGNED,
 	set_id		INT UNSIGNED,

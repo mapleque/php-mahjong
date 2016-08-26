@@ -5,12 +5,42 @@ class DBConn extends mysqli
 	function __construct($addr, $user, $pass, $db, $port = '3306')
 	{
 		parent::init();
-		parent::real_connect($addr, $user, $pass, $db, $port, null, MYSQLI_CLIENT_FOUND_ROWS);
+		$error_level = error_reporting(0);
+		// to void PHP Warning:  mysqli::real_connect(): Headers and client library minor version mismatch. Headers:50547 Library:50632
+		$err = parent::real_connect($addr, $user, $pass, $db, $port, null, MYSQLI_CLIENT_FOUND_ROWS);
+		error_reporting($error_level);
+
+		if ($this->connect_error) {
+			var_dump([ 'error', $this->connect_err ]);
+		}
 	}
 
 	function __destruct()
 	{
 		parent::close();
+	}
+
+	public function beginTransaction()
+	{
+		if ($this->transaction && $this->error_callback !== null) {
+			call_user_func($this->error_callback, 'Transaction re-entered');
+		}
+		parent::autocommit(false);
+		$this->transaction = true;
+	}
+
+	public function endTransaction($commit)
+	{
+		if (!$this->transaction) {
+			return;
+		}
+		if ($commit) {
+			parent::commit();
+		} else {
+			parent::rollback();
+		}
+		parent::autocommit(true);
+		$this->transaction = false;
 	}
 
 	public function select($query, $bind = null)
@@ -65,6 +95,10 @@ class DBConn extends mysqli
 	private function execQuery($query, $params = null)
 	{
 		$stmt = self::prepare($query);
+		if (!$stmt) {
+			printf("[sql error]: %s\n%s\n%s\n", $query, isset($params)?implode(',', $param):'', $this->error);
+			return FALSE;
+		}
 		if (is_array($params) && count($params) > 0) {
 			$params_refs = [];
 			$types = '';
