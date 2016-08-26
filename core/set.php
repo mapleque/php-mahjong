@@ -4,12 +4,16 @@ class Set
 {
 	/**
 	 * 创建一盘
-	 * @return int $set_id
+	 * @param int $game_id
+	 * @param int $user_id
+	 * @return bool
 	 */
-	public static function create()
+	public static function start($game_id)
 	{
-		$set_id = 0;
-		return $set_id;
+		$sql = 'INSERT INTO set_info (time) VALUES (NOW())';
+		$set_id = DB::insert($sql);
+		$sql = 'UPDATE user_log SET set_id = ? WHERE game_id = ?';
+		return DB::update($sql, [ $set_id, $user_id, $game_id ]) > 0;
 	}
 
 	/**
@@ -18,40 +22,16 @@ class Set
 	 * @param int $user_id
 	 * @return array
 	 */
-	public static function getSetInfo($set_id, $user_id)
+	public static function getSetInfo($user_id)
 	{
-		return [
-			cards => [
-				MENFENG_EAST => [
-					hand => [],
-					pool => [],
-					wall => [],
-					waiting => [],
-					win_info => [],
-				],
-				MENFENG_NORTH => [
-					hand => [],
-					pool => [],
-					wall => [],
-					waiting => [],
-					win_info => [],
-				],
-				MENFENG_WEST => [
-					hand => [],
-					pool => [],
-					wall => [],
-					waiting => [],
-					win_info => [],
-				],
-				MENFENG_SOUTH => [
-					hand => [],
-					pool => [],
-					wall => [],
-					waiting => [],
-					win_info => [],
-				],
-			],
-		];
+		$sql = 'SELECT set_id, game_id FROM user_log
+				INNER JOIN set_info ON set_id = set_info.id
+				WHERE user_id = ? && status = ? LIMIT 1';
+		$set_info = DB::select($sql, [ $user_id, SLS_READY ])[0];
+		$sql = 'SELECT user_id, status, hand, pool, waiting, win_info FROM user_log WHERE game_id = ? && status = ?';
+		$log_info = DB::select($sql, [ $set_info['game_id'], SLS_READY ]);
+		$set_info['log_info'] = $log_info;
+		return $set_info;
 	}
 
 	/**

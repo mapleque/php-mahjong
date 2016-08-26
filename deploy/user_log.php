@@ -1,6 +1,6 @@
 <?php
 
-DB::exec('CREATE TABLE set_log (
+DB::exec('CREATE TABLE user_log (
 	id			INT UNSIGNED AUTO INCREMENT PRIMARY KEY NOT NULL,
 	user_id		INT UNSIGNED,
 	game_id		INT UNSIGNED,

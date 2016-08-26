@@ -18,6 +18,6 @@ define('SET_OP_HU',		'h'); // 胡
 define('SET_OP_PUSH',	'u'); // 出牌
 
 // set_log.status
-define('SLS_CREATE',			'c'); // 刚建立
-define('SLS_READY',				'r'); // 已经准备开始
+define('SLS_CREATE',			'c'); // 开始前
+define('SLS_READY',				'r'); // 进行中
 define('SLS_FINISH',			'f'); // 已结束
