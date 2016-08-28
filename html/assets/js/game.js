@@ -5,57 +5,70 @@
 	/***************************************/
 	/* view
 	/***************************************/
-	var $body = $(document).find('article');
-
-	var $loginForm = (function(){
-		var $root = $('<div class="login-form"></div>');
-		var $form = $('<form>'
-			+'<input type="text" name="username">'
-			+'<input type="password" name="password">'
-			+'<input type="button" name="login" value="登陆">'
-			+'<input type="button" name="register" value="注册" disabled>'
-			+'</form>');
-		$root.append($form);
-		return $root;
-	})();
 
 	var loadLoginForm = function(){
-		$body.empty().append($loginForm);
-		// click to login
-		var $username = $loginForm.find('input[name=username]');
-		var $password = $loginForm.find('input[name=password]');
-		$loginForm.on('click', 'input[name=login]', function(){
-			login($username.val(), $password.val());
+		console.log('load login form');
+		U.tpl('login', function($root){
+			// click to login
+			$root.on('click', 'input[name=login]', function(){
+				var $username = $root.find('input[name=username]');
+				var $password = $root.find('input[name=password]');
+				login($username.val(), $password.val());
+			});
+			// login(username, password)
+			$root.on('click', 'input[name=register]', function(){
+				loadRegisterForm();
+			});
 		});
-		// login(username, password)
-		$loginForm.on('click', 'input[name=register]', function(){});
+	};
+	loadRegisterForm = function(){
+		console.log('load register form');
+		U.tpl('register', function($root){
+			$root.on('click', 'input[name=return]', function(){
+				loadLoginForm();
+			});
+		});
 	};
 
 	var loadGameList = function(data){
-		$body.empty().append('load game list' + JSON.stringify(data));
-		// show not on desk
-		// click to creat or join into
-		// create(game_id||null)
+		console.log('load game list' , JSON.stringify(data));
+		U.tpl('game_list', data, function($root){
+			// show not on desk
+			// click to creat or join into
+			$root.on('click', 'input[name=create]', function(){
+				var game_id = $(this).data('id');
+				if (!game_id) {
+					game_id = null;
+				}
+				create(game_id);
+			});
+		});
 	};
 	var loadReadyView = function(data){
-		$body.empty().append('load ready view' + JSON.stringify(data));
-		// waiting for user ready
-		// show ready button
-		// click to start a new set
-		// start(game_id)
+		console.log('load ready view' , JSON.stringify(data));
+		U.tpl('ready_view', data, function($root){
+			// waiting for user ready
+			// show ready button
+			// click to start a new set
+			// start(game_id)
+		});
 	};
 	var loadWaitingView = function(data){
-		$body.empty().append('load waiting view' + JSON.stringify(data));
-		// waiting for user op
-		// show op button
-		// click to request op with cmd
-		// op(set_id, cmd, sel)
+		console.log('load waiting view' , JSON.stringify(data));
+		U.tpl('waiting_view', data, function($root){
+			// waiting for user op
+			// show op button
+			// click to request op with cmd
+			// op(set_id, cmd, sel)
+		});
 	};
 
 	var loadPlayingView = function(data){
-		$body.empty().append('load playing view' + JSON.stringify(data));
-		// show playing view
-		// only update info to show
+		console.log('load playing view' , JSON.stringify(data));
+		U.tpl('playing_view', data, function($root){
+			// show playing view
+			// only update info to show
+		});
 	};
 
 	/***************************************/
@@ -72,6 +85,8 @@
 			}
 		});
 	};
+
+	var register = function(){};
 
 	var checkUserStatus = function(){
 		U.action('login', {
@@ -126,6 +141,7 @@
 			},
 			success:function(){
 				// waiting for status refresh
+				checkGameStatus();
 			}
 		});
 	};

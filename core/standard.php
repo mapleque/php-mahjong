@@ -1,6 +1,6 @@
 <?php
 
-class Standard
+class Standard implements iMahjong
 {
 	/**
 	 * 获取洗完的全部牌

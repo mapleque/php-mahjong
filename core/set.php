@@ -41,7 +41,8 @@ class Set
 	 * @return null|array $card_list
 	 */
 	public static function get($set_id, $user_id)
-	{}
+	{
+	}
 
 	/**
 	 * 用户操作

@@ -14,7 +14,7 @@ class User
 	public static function login($username, $password)
 	{
 		$sql = 'SELECT id, password FROM user WHERE username = ? LIMIT 1';
-		$user = DB::select($sql, [ $username]);
+		$user = DB::select($sql, [ $username ])[0];
 		return $password === $user['password'] ? $user['id'] : null;
 	}
 

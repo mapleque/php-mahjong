@@ -12,8 +12,9 @@ class Game
 		$sql = 'INSERT INTO game (member, time) VALUES (?,NOW())';
 		$game_id = DB::insert($sql, [ $member ]);
 		$sql = 'INSERT INTO user_log (user_id, game_id, set_id, status, time) VALUES (?,?,NULL,?,NOW())';
-		$user_log_id = DB::insert($sql, [ $user_id, $game_id, SLS_CREATE ]);
-		return $game_id > 0 && user_log_id > 0 ? $game_id : null;
+		$bind = [ $user_id, $game_id, SLS_CREATE ];
+		$user_log_id = DB::insert($sql, $bind);
+		return $game_id > 0 && $user_log_id > 0 ? $game_id : null;
 	}
 
 	/**
@@ -58,16 +59,16 @@ class Game
 	public static function getGameInfo($user_id)
 	{
 		$sql = 'SELECT game_id, set_id, member FROM user_log
-				INNER JOIN game ON game.id = game_id,
+				INNER JOIN game ON game.id = game_id
 				WHERE user_id = ? ORDER BY user_log.id DESC LIMIT 1';
 		$game_info = DB::select($sql, [ $user_id ])[0];
 		if (!isset($game_info)) {
 			return [];
 		}
 		$sql = 'SELECT username FROM user WHERE id IN (
-					SELECT user_id FROM user_log WHERE set_id = ?
+					SELECT user_id FROM user_log WHERE game_id = ?
 				)';
-		$game_info['user_list'] = DB::select($sql, [ $game_info['set_id'] ]);
+		$game_info['user_list'] = DB::select($sql, [ $game_info['game_id'] ]);
 		return $game_info;
 	}
 
@@ -80,6 +81,6 @@ class Game
 	{
 		$sql = 'SELECT count(*) AS c FROM user_log WHERE gamae_id = ? && set_id = ? && status = ? LIMIT 1';
 		$ready_count = DB::select($sql, [ $game_info['game_id'], $game_info['set_id'], SLS_READY ])[0]['c'];
-		return $ready_count === $game_info['member']
+		return $ready_count === $game_info['member'];
 	}
 }

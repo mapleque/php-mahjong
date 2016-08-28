@@ -83,7 +83,7 @@ class DBConn extends mysqli
 	public function exec($query, $bind = null)
 	{
 		$stmt = self::execQuery($query, $bind);
-		if ($stmt === FALSE) {
+		if ($stmt === false) {
 			return -1;
 		}
 
@@ -96,8 +96,8 @@ class DBConn extends mysqli
 	{
 		$stmt = self::prepare($query);
 		if (!$stmt) {
-			printf("[sql error]: %s\n%s\n%s\n", $query, isset($params)?implode(',', $param):'', $this->error);
-			return FALSE;
+			printf("[sql error]\n%s\nbind=[%s]\n%s\n", $query, isset($params)?implode(',', $params):'', $this->error);
+			die();
 		}
 		if (is_array($params) && count($params) > 0) {
 			$params_refs = [];

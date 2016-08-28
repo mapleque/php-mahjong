@@ -19,7 +19,7 @@ if (!isset($user_id)) {
 	}
 	$user_id = User::login($username, $password);
 	if (!isset($user_id)) {
-		Base::dieWithError(ERROR_INVALID_REQUEST);
+		Base::dieWithError(ERROR_INVALID_REQUEST, 'invalid user');
 	}
 	Base::login($user_id);
 }

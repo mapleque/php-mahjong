@@ -2,6 +2,15 @@
 
 class DB
 {
+	public static function begin()
+	{
+		return self::getDB()->beginTransaction();
+	}
+	public static function commit()
+	{
+		return self::getDB()->endTransaction();
+	}
+
 	public static function select($query, $bind = null)
 	{
 		return self::getDB()->select($query, $bind);

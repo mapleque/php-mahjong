@@ -22,6 +22,35 @@
 		});
 	};
 
+	U.tpl = function(tpl_name, data, callback){
+		if (typeof callback === 'undefined' && typeof data === 'function') {
+			callback = data;
+			data = {};
+		}
+		var die = function(tpl){
+			var $tpl = $(_.template(tpl)(data));
+			var $body = $(document).find('article');
+			$body.empty().append($tpl);
+			callback($tpl);
+		};
+		if (!U.tpl_catch) {
+			U.tpl_catch = {};
+		}
+		if (U.tpl_catch[tpl_name]) {
+			die(U.tpl_catch[tpl_name]);
+		} else {
+			$.ajax({
+				url: '/tpl/' + tpl_name + '.html',
+				type: 'GET',
+				dataType: 'text/html',
+				success: function(res){
+					U.tpl_catch[tpl_name] = res;
+					die(res);
+				}
+			});
+		}
+	};
+
 	var defaultError = function(status){
 		var errorMessage = {
 			1: '未登录',

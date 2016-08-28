@@ -1,0 +1,9 @@
+<div>
+	<%_.map(user_list, function(v,k){%>
+		<div><%=v.username%></div>
+	<%})%>
+	<div><%=member%></div>
+	<input type="button" data-id="<%=game_id%>" name="join" value="join">
+	<input type="button" name="ready" value="ready">
+</div>
+
