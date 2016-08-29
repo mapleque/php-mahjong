@@ -50,7 +50,10 @@
 			// waiting for user ready
 			// show ready button
 			// click to start a new set
-			// start(game_id)
+			$root.on('click', 'input[name=ready]', function(){
+				var game_id = $(this).data('id');
+				start(game_id);
+			});
 		});
 	};
 	var loadWaitingView = function(data){
@@ -141,7 +144,7 @@
 			},
 			success:function(){
 				// waiting for status refresh
-				checkGameStatus();
+				//checkGameStatus();
 			}
 		});
 	};

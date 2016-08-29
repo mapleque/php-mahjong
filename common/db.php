@@ -21,14 +21,14 @@ class DB
 		return self::getDB()->insert($query, $bind);
 	}
 
-	public static function exec($query, $bind = null)
+	public static function update($query, $bind = null)
 	{
-		return self::getDB()->exec($query, $bind, false);
+		return self::getDB()->exec($query, $bind);
 	}
 
 	public static function delete($query, $bind = null)
 	{
-		return self::getDB()->exec($query, $bind, false);
+		return self::getDB()->exec($query, $bind);
 	}
 
 	private static function getDB()

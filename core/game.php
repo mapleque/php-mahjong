@@ -9,10 +9,12 @@ class Game
 	 */
 	public static function create($user_id, $member = 4)
 	{
-		$sql = 'INSERT INTO game (member, time) VALUES (?,NOW())';
-		$game_id = DB::insert($sql, [ $member ]);
-		$sql = 'INSERT INTO user_log (user_id, game_id, set_id, status, time) VALUES (?,?,NULL,?,NOW())';
-		$bind = [ $user_id, $game_id, SLS_CREATE ];
+		$sql = 'INSERT INTO game (member, seq, round, time) VALUES (?,?,?,NOW())';
+		$game_id = DB::insert($sql, [ $member, EAST, EAST ]);
+		$sql = 'INSERT INTO user_log (user_id, game_id, set_id, seq, status, time) VALUES (?,?,NULL,(
+			SELECT count(*)+1 FROM user_log WHERE game_id = ? LIMIT 1
+		),?,NOW())';
+		$bind = [ $user_id, $game_id, SLS_CREATE, $game_id ];
 		$user_log_id = DB::insert($sql, $bind);
 		return $game_id > 0 && $user_log_id > 0 ? $game_id : null;
 	}
@@ -40,7 +42,6 @@ class Game
 
 	/**
 	 * 用户开始游戏
-	 * @param int $game_id
 	 * @param int $user_id
 	 * @return bool
 	 */
@@ -48,7 +49,7 @@ class Game
 	{
 		// 如果所有玩家都已经准备，需要置一个标记位，等待系统自动开始游戏
 		$sql = 'UPDATE user_log SET status = ? WHERE user_id = ? && status = ? LIMIT 1';
-		return DB::update($sql, [ SLS_READY, $user_id, SLS_CREATE ])[0];
+		return DB::update($sql, [ SLS_READY, $user_id, SLS_CREATE ]) === 1;
 	}
 
 	/**
@@ -79,8 +80,8 @@ class Game
 	 */
 	public static function isReady($game_info)
 	{
-		$sql = 'SELECT count(*) AS c FROM user_log WHERE gamae_id = ? && set_id = ? && status = ? LIMIT 1';
-		$ready_count = DB::select($sql, [ $game_info['game_id'], $game_info['set_id'], SLS_READY ])[0]['c'];
+		$sql = 'SELECT count(*) AS c FROM user_log WHERE game_id = ? && status = ? LIMIT 1';
+		$ready_count = DB::select($sql, [ $game_info['game_id'], SLS_READY ])[0]['c'];
 		return $ready_count === $game_info['member'];
 	}
 }

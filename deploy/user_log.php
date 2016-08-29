@@ -7,6 +7,8 @@ DB::exec('CREATE TABLE user_log (
 	game_id		INT UNSIGNED,
 	set_id		INT UNSIGNED,
 	status		CHAR(1) NOT NULL,
+	seq			INT UNSIGNED NOT NULL,
+	op			CHAR(1) NOT NULL,
 	hand		TEXT,
 	pool		TEXT,
 	waiting		TEXT,

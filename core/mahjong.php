@@ -7,6 +7,7 @@ interface iMahjong
 	 * @return array [index]
 	 */
 	public static function getTotalCard();
+
 	/**
 	 * 排序
 	 * @param array $cards
