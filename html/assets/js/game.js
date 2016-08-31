@@ -156,6 +156,7 @@
 			},
 			success:function(res){
 				// waiting for status refresh
+				checkGameStatus();
 			}
 		});
 	};

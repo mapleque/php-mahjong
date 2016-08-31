@@ -22,9 +22,6 @@ class DBConn extends mysqli
 
 	public function beginTransaction()
 	{
-		if ($this->transaction && $this->error_callback !== null) {
-			call_user_func($this->error_callback, 'Transaction re-entered');
-		}
 		parent::autocommit(false);
 		$this->transaction = true;
 	}
@@ -126,6 +123,7 @@ class DBConn extends mysqli
 		if ($stmt->execute()) {
 			return $stmt;
 		} else {
+			printf("[sql error]\n%s\nbind=[%s]\n%s\n", $query, isset($params)?implode(',', $params):'', $this->error);
 			$stmt->close();
 			return FALSE;
 		}

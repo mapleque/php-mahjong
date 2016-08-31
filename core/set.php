@@ -12,17 +12,20 @@ class Set
 	{
 		$rule = Mahjong::getRule('Standard');
 		$total_card = $rule->getTotalCard();
-		$sql = 'INSERT INTO set_info (total_card, cur_seq, time) VALUES (?,(
-			SELECT seq FROM game WHERE game_id = ? LIMIT 1
-		), NOW())';
+		DB::begin();
+		$sql = 'INSERT INTO set_info (total_card, cur_seq, time) SELECT ?, seq, NOW() FROM game WHERE id = ? LIMIT 1';
 		$set_id = DB::insert($sql, [ json_encode($total_card), $game_id ]);
 		if ($set_id <= 0) {
+			DB::commit(false);
 			return false;
 		}
 		$sql = 'UPDATE user_log SET set_id = ? WHERE game_id = ?';
-		if (DB::update($sql, [ $set_id, $game_id, $game_id ]) <= 0) {
+		if (DB::update($sql, [ $set_id, $game_id ]) <= 0) {
+			DB::commit(false);
 			return false;
 		}
+		DB::commit(true);
+		return true;
 	}
 
 	/**
@@ -43,12 +46,16 @@ class Set
 		return $set_info;
 	}
 
+	/**
+	 * @param int $user_id
+	 * @param array $total_card
+	 */
 	public static function updateTotalCard($user_id, $total_card)
 	{
 		$sql = 'UPDATE set_info SET total_card = ? WHERE id = (
 					SELECT set_id FROM user_log WHERE user_id = ? && status = ? LIMIT 1
 				) LIMIT 1';
-		$bind = [ , $user_id, SLS_READY ];
+		$bind = [ $total_card, $user_id, SLS_READY ];
 		return DB::update($sql, $bind) === 1;
 	}
 

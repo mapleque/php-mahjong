@@ -17,6 +17,7 @@ define('GANG',	'g'); // 杠
 define('HU',		'h'); // 胡
 define('PUSH',	'u'); // 出牌
 define('GET',	't'); // 抓牌
+define('GET4',	'4'); // 开始抓牌
 
 // set_log.status
 define('SLS_CREATE',			'c'); // 开始前

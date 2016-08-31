@@ -7,16 +7,24 @@ class Game
 	 * 创建游戏
 	 * @return int $game_id | null
 	 */
-	public static function create($user_id, $member = 4)
+	public static function create($user_id, $member = 1)
 	{
+		DB::begin();
 		$sql = 'INSERT INTO game (member, seq, round, time) VALUES (?,?,?,NOW())';
 		$game_id = DB::insert($sql, [ $member, EAST, EAST ]);
-		$sql = 'INSERT INTO user_log (user_id, game_id, set_id, seq, status, time) VALUES (?,?,NULL,(
-			SELECT count(*)+1 FROM user_log WHERE game_id = ? LIMIT 1
-		),?,NOW())';
-		$bind = [ $user_id, $game_id, SLS_CREATE, $game_id ];
+		if ($game_id <= 0) {
+			DB::commit(false);
+			return null;
+		}
+		$sql = 'INSERT INTO user_log (user_id, game_id, set_id, seq, op, status, time) SELECT ?,?,NULL,count(*)+1,?,?,NOW() FROM user_log WHERE game_id = ? LIMIT 1';
+		$bind = [ $user_id, $game_id, GET4, SLS_CREATE, $game_id ];
 		$user_log_id = DB::insert($sql, $bind);
-		return $game_id > 0 && $user_log_id > 0 ? $game_id : null;
+		if ($user_log_id <= 0) {
+			DB::commit(false);
+			return null;
+		}
+		DB::commit(true);
+		return $game_id;
 	}
 
 	/**

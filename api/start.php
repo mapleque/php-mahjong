@@ -24,7 +24,7 @@ if (!Game::isReady($game_info)) {
 	Base::dieWithResponse();
 }
 
-if (!Set::start($game_id, $user_id)) {
+if (!Set::start($game_id)) {
 	Base::dieWithError(ERROR_INTERNAL);
 }
 

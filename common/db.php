@@ -6,9 +6,9 @@ class DB
 	{
 		return self::getDB()->beginTransaction();
 	}
-	public static function commit()
+	public static function commit($commit)
 	{
-		return self::getDB()->endTransaction();
+		return self::getDB()->endTransaction($commit);
 	}
 
 	public static function select($query, $bind = null)
@@ -22,6 +22,11 @@ class DB
 	}
 
 	public static function update($query, $bind = null)
+	{
+		return self::getDB()->exec($query, $bind);
+	}
+
+	public static function exec($query, $bind = null)
 	{
 		return self::getDB()->exec($query, $bind);
 	}

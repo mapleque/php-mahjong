@@ -9,7 +9,7 @@ class Standard implements iMahjong
 	public static function getTotalCard()
 	{
 		$ret = [];
-		foreach ($index in range(1,200)) {
+		foreach (range(1,200) as $index) {
 			$card = self::genCard($index);
 			if ($card != null) {
 				$ret[] = $index;
