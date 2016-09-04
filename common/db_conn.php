@@ -94,6 +94,7 @@ class DBConn extends mysqli
 		$stmt = self::prepare($query);
 		if (!$stmt) {
 			printf("[sql error]\n%s\nbind=[%s]\n%s\n", $query, isset($params)?implode(',', $params):'', $this->error);
+			print_callstack();
 			die();
 		}
 		if (is_array($params) && count($params) > 0) {
@@ -124,6 +125,7 @@ class DBConn extends mysqli
 			return $stmt;
 		} else {
 			printf("[sql error]\n%s\nbind=[%s]\n%s\n", $query, isset($params)?implode(',', $params):'', $this->error);
+			print_callstack();
 			$stmt->close();
 			return FALSE;
 		}

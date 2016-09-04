@@ -8,6 +8,10 @@ class DB
 	}
 	public static function commit($commit)
 	{
+		if (!$commit) {
+			echo '[db rollback]' . "\n";
+			print_callstack();
+		}
 		return self::getDB()->endTransaction($commit);
 	}
 

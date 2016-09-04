@@ -1,5 +1,4 @@
 <?php
-require __DIR__ . '/../core/base.php';
 
 DB::exec('CREATE TABLE user (
 	id			INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,

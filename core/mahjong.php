@@ -3,10 +3,34 @@
 interface iMahjong
 {
 	/**
-	 * 获取洗完的全部牌
+	 * 洗牌生成新的牌堆
 	 * @return array [index]
 	 */
 	public static function getTotalCard();
+	/**
+	 * 从牌堆中获取初始牌
+	 * @param array &$total_card
+	 * @param bool $zhuang
+	 * @return array [card]
+	 */
+	public static function getInitCard(&$total_card, $zhuang = false);
+	/**
+	 * 从牌堆中获取一张牌
+	 * @param array &$total_card
+	 * @param bool $desc
+	 * @return array [card]
+	 */
+	public static function getOneCard(&$total_card);
+	/**
+	 * 查自己的牌有没有需要下一步的举动
+	 * @return array [ op,... ]
+	 */
+	public static function checkBySelf($hand_cards, $new_card);
+	/**
+	 * 查别人出的牌有没有需要下一步的举动
+	 * @return array [ op,... ]
+	 */
+	public static function checkByOther($hand_cards, $new_card);
 
 	/**
 	 * 排序

@@ -19,3 +19,19 @@ function dump($p, $prefix = '')
 		var_dump($p);
 	}
 }
+
+function dump_card($p)
+{
+	foreach($p as $e) {
+		echo
+			//'[',$e['index'],']',
+			//'[',$e['value'],']',
+			'|',$e['name'],'|';
+	}
+}
+
+function print_callstack()
+{
+	$e = new Exception;
+	var_dump($e->getTraceAsString());
+}

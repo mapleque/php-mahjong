@@ -10,14 +10,18 @@ class Game
 	public static function create($user_id, $member = 1)
 	{
 		DB::begin();
-		$sql = 'INSERT INTO game (member, seq, round, time) VALUES (?,?,?,NOW())';
-		$game_id = DB::insert($sql, [ $member, EAST, EAST ]);
+		$sql = 'INSERT INTO game (member, set_seq, game_seq, time)
+				VALUES (?,?,?,NOW())';
+		$game_id = DB::insert($sql, [ $member, SEQ_EAST, SEQ_EAST ]);
 		if ($game_id <= 0) {
 			DB::commit(false);
 			return null;
 		}
-		$sql = 'INSERT INTO user_log (user_id, game_id, set_id, seq, op, status, time) SELECT ?,?,NULL,count(*)+1,?,?,NOW() FROM user_log WHERE game_id = ? LIMIT 1';
-		$bind = [ $user_id, $game_id, GET4, SLS_CREATE, $game_id ];
+		$sql = 'INSERT INTO user_log
+					(user_id, game_id, set_id, seq, ops, status, time)
+				SELECT ?,?,NULL,count(*),?,?,NOW() FROM user_log
+				WHERE game_id = ? LIMIT 1';
+		$bind = [ $user_id, $game_id, OP_INIT , SLS_CREATE, $game_id ];
 		$user_log_id = DB::insert($sql, $bind);
 		if ($user_log_id <= 0) {
 			DB::commit(false);
@@ -35,17 +39,26 @@ class Game
 	 */
 	public static function attend($game_id, $user_id)
 	{
+		DB::begin();
 		$sql = 'SELECT member FROM game WHERE id = ? LIMIT 1';
 		$game_info = DB::select($sql, [ $game_id ])[0];
 		$sql = 'SELECT count(*) AS c FROM user_log WHERE game_id = ? LIMIT 1';
 		if (DB::select($sql, [ $game_id ])[0]['c'] >= $game_info['member']) {
+			DB::commit(false);
 			return false;
 		}
-		$sql = 'INSERT INTO user_log (user_id, game_id, set_id, status, time) VALUES (?,?,?,?,NOW())';
-		$user_log_id = DB::insert($sql, [ $user_id, $game_id, $set_id, SLS_CREATE ]);
-		if ($user_log_id > 0) {
-			return true;
+		$sql = 'INSERT INTO user_log
+					(user_id, game_id, set_id, seq, ops, status, time)
+				SELECT ?,?,NULL,count(*),?,?,NOW() FROM user_log
+				WHERE game_id = ? LIMIT 1';
+		$bind = [ $user_id, $game_id, OP_INIT , SLS_CREATE, $game_id ];
+		$user_log_id = DB::insert($sql, $bind);
+		if ($user_log_id <= 0) {
+			DB::commit(false);
+			return null;
 		}
+		DB::commit(true);
+		return true;
 	}
 
 	/**
@@ -56,7 +69,8 @@ class Game
 	public static function start($user_id)
 	{
 		// 如果所有玩家都已经准备，需要置一个标记位，等待系统自动开始游戏
-		$sql = 'UPDATE user_log SET status = ? WHERE user_id = ? && status = ? LIMIT 1';
+		$sql = 'UPDATE user_log SET status = ?
+				WHERE user_id = ? && status = ? LIMIT 1';
 		return DB::update($sql, [ SLS_READY, $user_id, SLS_CREATE ]) === 1;
 	}
 
@@ -88,8 +102,10 @@ class Game
 	 */
 	public static function isReady($game_info)
 	{
-		$sql = 'SELECT count(*) AS c FROM user_log WHERE game_id = ? && status = ? LIMIT 1';
-		$ready_count = DB::select($sql, [ $game_info['game_id'], SLS_READY ])[0]['c'];
+		$sql = 'SELECT count(*) AS c FROM user_log
+				WHERE game_id = ? && status = ? LIMIT 1';
+		$ready_count = DB::select($sql, [
+			$game_info['game_id'], SLS_READY ])[0]['c'];
 		return $ready_count === $game_info['member'];
 	}
 }

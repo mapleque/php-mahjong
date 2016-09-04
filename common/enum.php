@@ -5,21 +5,22 @@ define('MAHJONG_TYPE_SEQ',				's'); // 序数牌 1-9*4*3
 define('MAHJONG_TYPE_WORD',				'w'); // 字牌 7*4
 define('MAHJONG_TYPE_FLOUR',			'f'); // 花牌 8
 
-define('EAST',						1); // 风
-define('NORTH',						2); // 风
-define('WEST',						3); // 风
-define('SOUTH',						4); // 风
+define('SEQ_EAST',						0); // 风
+define('SEQ_NORTH',						1); // 风
+define('SEQ_WEST',						2); // 风
+define('SEQ_SOUTH',						3); // 风
 
 // set.op
-define('CHI',	'c'); // 吃
-define('PENG',	'p'); // 碰
-define('GANG',	'g'); // 杠
-define('HU',		'h'); // 胡
-define('PUSH',	'u'); // 出牌
-define('GET',	't'); // 抓牌
-define('GET4',	'4'); // 开始抓牌
+define('OP_CHI',	'c'); // 吃
+define('OP_PENG',	'p'); // 碰
+define('OP_GANG',	'g'); // 杠
+define('OP_HU',		'h'); // 胡
+define('OP_PUSH',	'u'); // 出牌
+define('OP_GET',	't'); // 抓牌
+define('OP_INIT',	'i'); // 开始抓牌
+define('OP_PASS',	's'); // 放弃本轮操作
 
-// set_log.status
+// user_log.status
 define('SLS_CREATE',			'c'); // 开始前
 define('SLS_READY',				'r'); // 进行中
 define('SLS_FINISH',			'f'); // 已结束

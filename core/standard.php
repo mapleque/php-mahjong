@@ -17,6 +17,71 @@ class Standard implements iMahjong
 		}
 		return self::disorder($ret);
 	}
+	/**
+	 * 从牌堆中获取初始牌
+	 * @param array &$total_card
+	 * @param bool $zhuang
+	 * @return array [card]
+	 */
+	public static function getInitCard(&$total_card, $zhuang = false)
+	{
+		$cards = [];
+		if ($zhuang) {
+			$card_index_list = array_splice($total_card, 0, 14);
+		} else {
+			$card_index_list = array_splice($total_card, 0, 13);
+		}
+		foreach ($card_index_list as $index) {
+			$cards[] = self::genCard($index);
+		}
+		$cards = self::order($cards);
+		return $cards;
+	}
+	/**
+	 * 从牌堆中获取一张牌
+	 * @param array &$total_card
+	 * @param bool $desc
+	 * @return array card
+	 */
+	public static function getOneCard(&$total_card)
+	{
+		$index = array_splice($total_card, 0, 1)[0];
+		$card = self::genCard($index);
+		return $card;
+	}
+	/**
+	 * 查自己的牌有没有需要下一步的举动
+	 * @return array [ op,... ]
+	 */
+	public static function checkBySelf($hand_cards, $new_card)
+	{
+		$op = [];
+		if (self::isHu($hand_cards, $new_card)) {
+			$op[] = OP_HU;
+		}
+		if (self::isGang($hand_cards, $new_card)) {
+			$op[] = OP_GANG;
+		}
+		return $op;
+	}
+	/**
+	 * 查别人出的牌有没有需要下一步的举动
+	 * @return array [ op,... ]
+	 */
+	public static function checkByOther($hand_cards, $new_card)
+	{
+		$op = [];
+		if (self::isHu($hand_cards, $new_card)) {
+			$op[] = OP_HU;
+		}
+		if (self::isChi($hand_cards, $new_card)) {
+			$op[] = OP_CHI;
+		}
+		if (self::isPeng($hand_cards, $new_card)) {
+			$op[] = OP_PENG;
+		}
+		return $op;
+	}
 
 	/**
 	 * 排序
@@ -257,7 +322,7 @@ class Standard implements iMahjong
 				'value' => 88,
 				'ignore' => [],
 				'func' => function($hand_cards, $get_card){
-					return true;
+					return false;
 				}
 			],
 			// 5、十八罗汉：4个杠，因和牌时总共18张牌，又称“十八罗汉”。
