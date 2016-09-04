@@ -1,7 +1,28 @@
 /**
- * 与服务端交互的方法
+ * 与服务端交互的方法及定义
  */
 ;(function(){
+	if (!window.C) window.C = {};
+	_.extend(C, {
+		OP_CHI:		'c',
+		OP_PENG:	'p',
+		OP_GANG:	'g',
+		OP_HU:		'h',
+		OP_PUSH:	'u',
+		OP_GET:		't',
+		OP_INIT:	'i',
+		OP_PASS:	's',
+		op: {
+			'c' : '吃',
+			'p' : '碰',
+			'g' : '杠',
+			'h' : '胡',
+			'u' : '出',
+			't' : '抓',
+			'i' : '起',
+			's' : '过'
+		}
+	});
 	if (!window.U) window.U = {};
 	U.action = function(url, conf){
 		var url = '/' + url + '.php';

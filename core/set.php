@@ -37,7 +37,8 @@ class Set
 	public static function getSetInfo($user_id)
 	{
 		// TODO fix select
-		$sql = 'SELECT set_id, game_id, win_info, cur_seq, wait_seqs, wait_card
+		$sql = 'SELECT set_id, game_id, win_info, cur_seq,
+					wait_seqs, wait_card, seq
 				FROM user_log
 				INNER JOIN set_info ON set_id = set_info.id
 				WHERE user_id = ? && status = ? LIMIT 1';
@@ -47,11 +48,14 @@ class Set
 			explode(',', $set_info['wait_seqs']) : [];
 		$sql = 'SELECT status, seq, ops, hand, pool FROM user_log WHERE game_id = ? && status = ?';
 		$log_info = DB::select($sql, [ $set_info['game_id'], SLS_READY ]);
-		foreach ($log_info as &$info) {
+		$user_info = [];
+		foreach ($log_info as $info) {
 			$info['hand'] = json_decode($info['hand'], true);
 			$info['pool'] = json_decode($info['pool'], true);
+			$info['ops'] = explode(',', $info['ops']);
+			$user_info[$info['seq']] = $info;
 		}
-		$set_info['log_info'] = $log_info;
+		$set_info['log_info'] = $user_info;
 		return $set_info;
 	}
 
@@ -111,14 +115,18 @@ class Set
 			case OP_PUSH:
 				// TODO 出牌后需要轮询，放弃后还要回本家
 				$hand = json_decode($info['hand'], true);
-				$card = array_splice($hand, $card_index_list[0], 1)[0];
 				$wait_card = json_decode($info['wait_card'], true);
-				if (isset($wait_card)) {
-					// 初始化抓完牌的时候并没有wait_card
-					// chi或者peng之后也没有wait_card
-					$hand[] = $wait_card;
+				if (empty($card_index_list)) {
+					$card = $wait_card;
+				} else {
+					$card = array_splice($hand, $card_index_list[0], 1)[0];
+					if (isset($wait_card)) {
+						// 初始化抓完牌的时候并没有wait_card
+						// chi或者peng之后也没有wait_card
+						$hand[] = $wait_card;
+						$hand = $rule->order($hand);
+					}
 				}
-				$hand = $rule->order($hand);
 
 				$sql = 'SELECT id, hand, seq FROM user_log
 						WHERE set_id = ? && user_id != ? ORDER BY seq';
@@ -134,13 +142,14 @@ class Set
 							DB::commit(false);
 							return false;
 						}
+						$wait_seqs[] = $user['seq'];
 					}
 				}
 				$sql = 'UPDATE set_info
 						SET wait_seqs = ?, wait_card = ?, cur_seq = ?
 						WHERE id = ? LIMIT 1';
-				$bind = [ empty($wait_seqs)? null :implode(',', $wait_seqs),
-					json_encode($card),
+				$bind = [ empty($wait_seqs)? null : implode(',', $wait_seqs),
+					empty($wait_seqs)? null : json_encode($card),
 					($info['cur_seq'] + 1) % $info['member'], $set_id ];
 				if (DB::update($sql, $bind) !== 1) {
 					DB::commit(false);
@@ -161,6 +170,7 @@ class Set
 				$hand = json_decode($info['hand'], true);
 				$op = $rule->checkBySelf($hand, $card);
 				if (!empty($op)) {
+					$op[] = OP_PASS;
 					$next_cmd = implode(',', $op);
 				} else {
 					$next_cmd = OP_PUSH;
@@ -173,9 +183,10 @@ class Set
 					return false;
 				}
 				$sql = 'UPDATE set_info
-						SET wait_card = ?
+						SET wait_card = ?, total_card = ?
 						WHERE id = ? LIMIT 1';
-				$bind = [ json_encode($card), $set_id ];
+				$bind = [ json_encode($card), json_encode($total_card),
+					$set_id ];
 				if (DB::update($sql, $bind) !== 1) {
 					DB::commit(false);
 					return false;
@@ -183,11 +194,10 @@ class Set
 				break;
 			case OP_INIT:
 				$total_card = json_decode($info['total_card'], true);
-				$next_cmd = OP_GET;
 				$hand = $rule->getInitCard($total_card);
 				$sql = 'UPDATE user_log SET ops = ?, hand = ?
 						WHERE id = ? LIMIT 1';
-				$bind = [ $next_cmd, json_encode($hand), $log_id ];
+				$bind = [ OP_GET, json_encode($hand), $log_id ];
 				if (DB::update($sql, $bind) !== 1) {
 					DB::commit(false);
 					return false;
@@ -201,18 +211,32 @@ class Set
 					return false;
 				}
 				break;
-			case PASS:
-				$wait_seqs = explode(',', $info['wait_seqs']);
-				array_shift($wait_seqs);
-				$sql = 'UPDATE set_info SET wait_seqs = ?
-						WHERE id= ? LIMIT 1';
-				$bind = [ implode(',', $wait_seqs), $set_id ];
-				if (DB::update($sql, $bind) !== 1) {
-					DB::commit(false);
-					return false;
+			case OP_PASS:
+				$wait_seqs = $info['wait_seqs'] ?
+					explode(',', $info['wait_seqs']) : [];
+				if (!empty($wait_seqs)) {
+					array_shift($wait_seqs);
+					$sql = 'UPDATE set_info SET wait_seqs = ?
+							WHERE id= ? LIMIT 1';
+					$bind = [ implode(',', $wait_seqs), $set_id ];
+					if (DB::update($sql, $bind) !== 1) {
+						DB::commit(false);
+						return false;
+					}
+					$sql = 'UPDATE user_log SET ops = ? WHERE id = ? LIMIT 1';
+					$bind = [ OP_GET, $log_id ];
+					if (DB::update($sql, $bind) !== 1) {
+						DB::commit(false);
+						return false;
+					}
+				} else {
+					$sql = 'UPDATE user_log SET ops = ? WHERE id = ? LIMIT 1';
+					$bind = [ OP_PUSH, $log_id ];
+					if (DB::update($sql, $bind) !== 1) {
+						DB::commit(false);
+						return false;
+					}
 				}
-				$sql = 'UPDATE user_log SET ops = ? WHERE id = ? LIMIT 1';
-				$bind = [ OP_GET, $log_id ];
 				break;
 			default:
 				DB::commit(false);

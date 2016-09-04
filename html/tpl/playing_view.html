@@ -1,6 +1,18 @@
 <div>
-	<div>
-		card:
+	<div class="ops">
+		<%_.map(log_info[seq].ops, function(v,k){%>
+		<input type="button" data-op="<%=v%>" value="<%=C.op[v]%>" class="op">
+		<%});%>
 	</div>
+	<div class="hand">
+		<%_.map(log_info[seq].hand, function(v,k) {%>
+			<input type="button" data-index="<%=k%>" value="<%=v.name%>" class="card card_<%=v.value%> <%=v.used?'card_used':''%>">
+		<%});%>
+	</div>
+	<%if (wait_card) {%>
+	<div class="wait">
+			<input type="button" value="<%=wait_card.name%>" class="card card_<%=wait_card.value%>">
+	</div>
+	<%}%>
 </div>
 
