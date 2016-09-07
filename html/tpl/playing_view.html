@@ -1,7 +1,7 @@
 <div>
 	<div class="ops">
 		<%_.map(log_info[seq].ops, function(v,k){%>
-		<input type="button" data-op="<%=v%>" value="<%=C.op[v]%>" class="op">
+		<input type="button" data-op="<%=v%>" value="<%=C.op[v]%>" class="op op_<%=v%>">
 		<%});%>
 	</div>
 	<div class="hand">

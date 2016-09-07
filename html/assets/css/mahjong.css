@@ -1,0 +1,15 @@
+.op {
+	background-color:darkorange;
+	border:none;
+	color:white;
+	height:30px;
+	width:30px;
+}
+.card {
+	background-color:darkgreen;
+	border:none;
+	color:white;
+	height:70px;
+	width:52px;
+}
+
