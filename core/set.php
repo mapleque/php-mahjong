@@ -113,11 +113,18 @@ class Set
 			case OP_HU:
 				$hand = json_decode($info['hand'], true);
 				$wait_card = json_decode($info['wait_card'], true);
-				$rule->calFan($hand, $wait_card);
+				$fan = $rule->calFan($hand, $wait_card);
+				$sql = 'UPDATE set_info SET win_info = ?
+						WHERE id = ? LIMIT 1';
+				$bind = [ json_encode($fan), $set_id ];
+				if (DB::update($sql, $bind) !== 1) {
+					DB::commit(false);
+					return false;
+				}
 				break;
 			case OP_PUSH:
-				// TODO 出牌后需要轮询，放弃后还要回本家
 				$hand = json_decode($info['hand'], true);
+				$pool = $info['pool'] ? json_decode($info['pool'], true) : [];
 				$wait_card = json_decode($info['wait_card'], true);
 				if (empty($card_index_list)) {
 					$card = $wait_card;
@@ -148,6 +155,9 @@ class Set
 						$wait_seqs[] = $user['seq'];
 					}
 				}
+				if (empty($wait_seqs)) {
+					$pool[] = $card;
+				}
 				$sql = 'UPDATE set_info
 						SET wait_seqs = ?, wait_card = ?, cur_seq = ?
 						WHERE id = ? LIMIT 1';
@@ -159,9 +169,10 @@ class Set
 					return false;
 				}
 
-				$sql = 'UPDATE user_log SET hand = ?, ops = ?
+				$sql = 'UPDATE user_log SET hand = ?, pool = ?, ops = ?
 						WHERE id = ? LIMIT 1';
-				$bind = [ json_encode($hand), OP_GET, $log_id ];
+				$bind = [ json_encode($hand), json_encode($pool),
+					OP_GET, $log_id ];
 				if (DB::update($sql, $bind) !== 1) {
 					DB::commit(false);
 					return false;

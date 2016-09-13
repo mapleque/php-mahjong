@@ -1,12 +1,76 @@
+.play-pannel {
+	width:800px;
+	height:600px;
+	position:relative;
+	text-align:center;
+	margin:auto;
+	background:white;
+}
+.game-seq {
+	position:absolute;
+	width:100px;
+	left:0;
+	text-align:center;
+}
+.set-seq {
+	position:absolute;
+	width:100px;
+	left:100px;
+	text-align:center;
+}
+.game-seq i, .set-seq i{
+	width:51px;
+	height:50px;
+	line-height:50px;
+	display:inline-block;
+}
+.game-seq div, .set-seq div {
+	width:51px;
+	height:73px;
+	display:inline-block;
+}
+.play-banner {
+	border:1px solid rgba(0,0,0,0.25);
+	border-radius:5px;
+	position:absolute;
+	top:228px;
+	left:298px;
+	width:200px;
+	height:140px;
+}
+.player-0 {
+	height: 100px;
+	position:absolute;
+	margin:auto;
+	padding:10px;
+	bottom:0;
+}
+.pool {
+	bottom:83px;
+	position:absolute;
+}
 .ops {
-	float:left;
+	width:170px;
+	position:absolute;
+	left:630px;
+	bottom:93px;
 }
 .hand {
-	float:left;
+	width:663px;
+	bottom:10px;
+	position:absolute;
 }
 .wait {
-	float:left;
-	margin-left:10px;
+	width:51px;
+	left:683px;
+	bottom:10px;
+	position:absolute;
+}
+.flower {
+	width:56px;
+	left:734px;
+	bottom:10px;
+	position:absolute;
 }
 .op {
 	background-color:darkorange;
