@@ -101,6 +101,10 @@
 				}
 				multi_sel = 3;
 			});
+			// 如果只能选择抓牌操作，系统自动操作了
+			if (data.log_info[data.seq].ops.length == 1 && data.log_info[data.seq].ops[0] == C.OP_GET) {
+				op(C.OP_GET);
+			}
 		});
 	};
 

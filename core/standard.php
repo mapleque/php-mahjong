@@ -9,7 +9,7 @@ class Standard implements iMahjong
 	public static function getTotalCard()
 	{
 		$ret = [];
-		foreach (range(1,200) as $index) {
+		foreach (range(1,160) as $index) {
 			$card = self::genCard($index);
 			if ($card != null) {
 				$ret[] = $index;
@@ -556,7 +556,6 @@ class Standard implements iMahjong
 			}
 			$card_name = $flour_name[$index % 10 - 1];
 			$card_type = MAHJONG_TYPE_FLOUR;
-			$card_value = 0;
 		} else {
 			return null;
 		}

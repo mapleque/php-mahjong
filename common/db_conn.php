@@ -6,8 +6,11 @@ class DBConn extends mysqli
 	{
 		parent::init();
 		$error_level = error_reporting(0);
-		// to void PHP Warning:  mysqli::real_connect(): Headers and client library minor version mismatch. Headers:50547 Library:50632
-		$err = parent::real_connect($addr, $user, $pass, $db, $port, null, MYSQLI_CLIENT_FOUND_ROWS);
+		// to void PHP Warning:
+		//     mysqli::real_connect(): Headers and client library minor version
+		//     mismatch. Headers:50547 Library:50632
+		$err = parent::real_connect($addr, $user, $pass, $db, $port,
+									null, MYSQLI_CLIENT_FOUND_ROWS);
 		error_reporting($error_level);
 
 		if ($this->connect_error) {
@@ -48,7 +51,8 @@ class DBConn extends mysqli
 		$temp_data = [];
 
 		$metadata = $select_stmt->result_metadata();
-		for ($field = $metadata->fetch_field(); $field ; $field = $metadata->fetch_field())
+		for ($field = $metadata->fetch_field();
+				$field ; $field = $metadata->fetch_field())
 			$variables[] = &$temp_data[$field->name];
 		call_user_func_array([ $select_stmt, 'bind_result' ], $variables);
 
@@ -93,7 +97,10 @@ class DBConn extends mysqli
 	{
 		$stmt = self::prepare($query);
 		if (!$stmt) {
-			printf("[sql error]\n%s\nbind=[%s]\n%s\n", $query, isset($params)?implode(',', $params):'', $this->error);
+			printf("[sql error]\n%s\nbind=[%s]\n%s\n",
+					$query,
+					isset($params)?implode(',', $params):'',
+					$this->error);
 			print_callstack();
 			die();
 		}
@@ -124,7 +131,10 @@ class DBConn extends mysqli
 		if ($stmt->execute()) {
 			return $stmt;
 		} else {
-			printf("[sql error]\n%s\nbind=[%s]\n%s\n", $query, isset($params)?implode(',', $params):'', $this->error);
+			printf("[sql error]\n%s\nbind=[%s]\n%s\n",
+					$query,
+					isset($params)?implode(',', $params):'',
+					$this->error);
 			print_callstack();
 			$stmt->close();
 			return FALSE;

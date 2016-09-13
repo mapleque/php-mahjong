@@ -1,17 +1,19 @@
 <div>
 	<div class="ops">
 		<%_.map(log_info[seq].ops, function(v,k){%>
+		<%if (_.contains(v, [ C.OP_PUSH, C.OP_GET ])) {// 抓牌出牌不用操作按钮%>
 		<input type="button" data-op="<%=v%>" value="<%=C.op[v]%>" class="op op_<%=v%>">
+		<%}%>
 		<%});%>
 	</div>
 	<div class="hand">
 		<%_.map(log_info[seq].hand, function(v,k) {%>
-			<input type="button" data-index="<%=k%>" value="<%=v.name%>" class="card card_<%=v.value%> <%=v.used?'card_used':''%>">
+			<input type="button" data-index="<%=k%>" data-value="<%=v.name%>" class="card card_<%=v.value%> <%=v.used?'card_used':''%>">
 		<%});%>
 	</div>
 	<%if (wait_card) {%>
 	<div class="wait">
-			<input type="button" value="<%=wait_card.name%>" class="card card_<%=wait_card.value%>">
+			<input type="button" data-value="<%=wait_card.name%>" class="card card_<%=wait_card.value%>">
 	</div>
 	<%}%>
 </div>

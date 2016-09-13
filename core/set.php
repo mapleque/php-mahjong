@@ -111,6 +111,9 @@ class Set
 			case OP_GANG:
 				break;
 			case OP_HU:
+				$hand = json_decode($info['hand'], true);
+				$wait_card = json_decode($info['wait_card'], true);
+				$rule->calFan($hand, $wait_card);
 				break;
 			case OP_PUSH:
 				// TODO 出牌后需要轮询，放弃后还要回本家

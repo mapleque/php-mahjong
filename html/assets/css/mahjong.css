@@ -1,3 +1,13 @@
+.ops {
+	float:left;
+}
+.hand {
+	float:left;
+}
+.wait {
+	float:left;
+	margin-left:10px;
+}
 .op {
 	background-color:darkorange;
 	border:none;
@@ -7,9 +17,58 @@
 }
 .card {
 	background-color:darkgreen;
+	background-image:url(../img/cards.jpg);
+	background-repeat:no-repeat;
+	background-size:459px 365px;
+	background-position:0 0;
+	background-attachment:scroll;
 	border:none;
 	color:white;
-	height:70px;
-	width:52px;
+	float:left;
+	height:73px;
+	overflow:hidden;
+	width:51px;
 }
-
+.card_1 {background-position:-0px -0px;}
+.card_2 {background-position:-51px -0px;}
+.card_3 {background-position:-102px -0px;}
+.card_4 {background-position:-153px -0px;}
+.card_5 {background-position:-204px -0px;}
+.card_6 {background-position:-255px -0px;}
+.card_7 {background-position:-306px -0px;}
+.card_8 {background-position:-357px -0px;}
+.card_9 {background-position:-408px -0px;}
+.card_11 {background-position:-0px -73px;}
+.card_12 {background-position:-51px -73px;}
+.card_13 {background-position:-102px -73px;}
+.card_14 {background-position:-153px -73px;}
+.card_15 {background-position:-204px -73px;}
+.card_16 {background-position:-255px -73px;}
+.card_17 {background-position:-306px -73px;}
+.card_18 {background-position:-357px -73px;}
+.card_19 {background-position:-408px -73px;}
+.card_21 {background-position:-0px -146px;}
+.card_22 {background-position:-51px -146px;}
+.card_23 {background-position:-102px -146px;}
+.card_24 {background-position:-153px -146px;}
+.card_25 {background-position:-204px -146px;}
+.card_26 {background-position:-255px -146px;}
+.card_27 {background-position:-306px -146px;}
+.card_28 {background-position:-357px -146px;}
+.card_29 {background-position:-408px -146px;}
+.card_30 {background-position:--51px -219px;}
+.card_31 {background-position:-0px -219px;}
+.card_32 {background-position:-51px -219px;}
+.card_33 {background-position:-102px -219px;}
+.card_34 {background-position:-153px -219px;}
+.card_35 {background-position:-204px -219px;}
+.card_36 {background-position:-255px -219px;}
+.card_37 {background-position:-306px -219px;}
+.card_41 {background-position:-0px -292px;}
+.card_42 {background-position:-51px -292px;}
+.card_43 {background-position:-102px -292px;}
+.card_44 {background-position:-153px -292px;}
+.card_45 {background-position:-204px -292px;}
+.card_46 {background-position:-255px -292px;}
+.card_47 {background-position:-306px -292px;}
+.card_48 {background-position:-357px -292px;}
